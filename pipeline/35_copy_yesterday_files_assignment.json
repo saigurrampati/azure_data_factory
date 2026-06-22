@@ -1,5 +1,5 @@
 {
-	"name": "35_until_activity_assignment",
+	"name": "35_copy_yesterday_files_assignment",
 	"properties": {
 		"activities": [
 			{
@@ -118,7 +118,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "35_parent_pipeline_for_until_activity_assignment",
+									"referenceName": "35_parent_pipeline_for_copy_yesterday_files_assignment",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
