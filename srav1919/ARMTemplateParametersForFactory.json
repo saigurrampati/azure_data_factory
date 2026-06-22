@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "srav1919"
+		},
+		"ls_sqldb_password": {
+			"value": ""
+		},
+		"ls_storagesai19_accountKey": {
+			"value": ""
+		},
+		"ls_key_vault_properties_typeProperties_baseUrl": {
+			"value": "https://sai-keyv.vault.azure.net/"
+		},
+		"ls_sqldb_properties_typeProperties_server": {
+			"value": "sai-sqlserver.database.windows.net"
+		},
+		"ls_sqldb_properties_typeProperties_database": {
+			"value": "sai_database"
+		},
+		"ls_sqldb_properties_typeProperties_userName": {
+			"value": "sai"
+		},
+		"ls_sqldb_with_keyvault_properties_typeProperties_server": {
+			"value": "sai-sqlserver.database.windows.net"
+		},
+		"ls_sqldb_with_keyvault_properties_typeProperties_database": {
+			"value": "sai_database"
+		},
+		"ls_sqldb_with_keyvault_properties_typeProperties_userName": {
+			"value": "sai"
+		},
+		"ls_storagesai19_properties_typeProperties_url": {
+			"value": "https://storagesai19.dfs.core.windows.net/"
+		}
+	}
+}
