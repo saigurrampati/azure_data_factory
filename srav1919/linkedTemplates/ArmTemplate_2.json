@@ -490,7 +490,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/35_parent_pipeline_for_until_activity_assignment')]",
+			"name": "[concat(parameters('factoryName'), '/35_parent_pipeline_for_copy_yesterday_files_assignment')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1572,7 +1572,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/35_until_activity_assignment')]",
+			"name": "[concat(parameters('factoryName'), '/35_copy_yesterday_files_assignment')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1694,7 +1694,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "35_parent_pipeline_for_until_activity_assignment",
+											"referenceName": "35_parent_pipeline_for_copy_yesterday_files_assignment",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
@@ -1721,7 +1721,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/35_parent_pipeline_for_until_activity_assignment')]"
+				"[concat(variables('factoryId'), '/pipelines/35_parent_pipeline_for_copy_yesterday_files_assignment')]"
 			]
 		}
 	]
