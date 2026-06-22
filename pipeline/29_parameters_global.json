@@ -1,0 +1,40 @@
+{
+	"name": "29_parameters_global",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "msg",
+					"value": {
+						"value": "@concat(\n    'Person name is ', pipeline().parameters.person_name,\n    ' and age is ', pipeline().parameters.person_age,\n    ' and County is ', pipeline().globalParameters.country\n    )",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"person_name": {
+				"type": "string"
+			},
+			"person_age": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"msg": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-06-21T16:14:55Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

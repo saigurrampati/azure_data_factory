@@ -1,0 +1,25 @@
+{
+	"name": "ds__sink_merge_scsv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_storagesai19",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "mergefiles.csv",
+				"folderPath": "sink_dir",
+				"fileSystem": "saicontainer"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

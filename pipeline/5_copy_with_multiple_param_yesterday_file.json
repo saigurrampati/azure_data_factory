@@ -1,0 +1,171 @@
+{
+	"name": "5_copy_with_multiple_param_yesterday_file",
+	"properties": {
+		"activities": [
+			{
+				"name": "TimeStamp Todays",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "time_stamp_now",
+					"value": {
+						"value": "@utcNow()",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Add requried days time stamp",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "TimeStamp Todays",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "add_days_time_stamp",
+					"value": {
+						"value": "@adddays(variables('time_stamp_now'), -1)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Required Date",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Add requried days time stamp",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "required_date",
+					"value": {
+						"value": "@formatDateTime(variables('add_days_time_stamp'), 'ddMMyyyy')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Required File",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Required Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "required_file",
+					"value": {
+						"value": "@concat('sales_', variables('required_date'), '.txt')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Copy yesterdays file",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Required File",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_src_multi_parameter",
+						"type": "DatasetReference",
+						"parameters": {
+							"foldername": "src_dir",
+							"filename": {
+								"value": "@variables('required_file')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sink_dir",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"variables": {
+			"time_stamp_now": {
+				"type": "String"
+			},
+			"add_days_time_stamp": {
+				"type": "String"
+			},
+			"required_date": {
+				"type": "String"
+			},
+			"required_file": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-06-16T10:06:36Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

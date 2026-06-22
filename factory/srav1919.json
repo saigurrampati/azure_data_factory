@@ -1,0 +1,21 @@
+{
+	"name": "srav1919",
+	"properties": {
+		"globalParameters": {
+			"country": {
+				"type": "string",
+				"value": "INDIA"
+			}
+		},
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "5140d6cc-d260-449b-8388-2e7ea860c1d8",
+		"tenantId": "2e2e3a79-da62-4e2b-92ae-c5ee150c98a9"
+	}
+}

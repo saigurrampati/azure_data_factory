@@ -1,0 +1,25 @@
+{
+	"name": "ds_sink_lookup_parameter_sqldb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqldb_with_keyvault",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tablename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "saischema1",
+			"table": {
+				"value": "@dataset().tablename",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

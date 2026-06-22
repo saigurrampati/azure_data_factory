@@ -1,0 +1,26 @@
+{
+	"name": "db_src_sqldb_lookup",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqldb_with_keyvault",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "dept_id",
+				"type": "varchar"
+			},
+			{
+				"name": "dept_name",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "saischema1",
+			"table": "dept_tbl"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
