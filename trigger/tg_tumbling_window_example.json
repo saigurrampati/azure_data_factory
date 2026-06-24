@@ -16,7 +16,7 @@
 		"type": "TumblingWindowTrigger",
 		"typeProperties": {
 			"frequency": "Minute",
-			"interval": 5,
+			"interval": 12,
 			"startTime": "2026-06-25T21:58:00Z",
 			"endTime": "2026-06-27T00:00:00Z",
 			"delay": "00:00:00",
