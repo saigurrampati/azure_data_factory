@@ -1,0 +1,33 @@
+{
+	"name": "ds_src_gen2_json_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_storagesai19",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "orders.json",
+				"folderPath": "src_dir",
+				"fileSystem": "saicontainer"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"order_id": {
+					"type": "string"
+				},
+				"cust_id": {
+					"type": "string"
+				},
+				"order_amt": {
+					"type": "integer"
+				}
+			}
+		}
+	}
+}
