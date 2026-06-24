@@ -3,16 +3,6 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipeline": {
-			"pipelineReference": {
-				"referenceName": "41_tumbling_window_trigger_example",
-				"type": "PipelineReference"
-			},
-			"parameters": {
-				"window_start_time": "@{trigger().outputs.windowStartTime}",
-				"window_end_time": "@{trigger().outputs.windowEndTime}"
-			}
-		},
 		"type": "TumblingWindowTrigger",
 		"typeProperties": {
 			"frequency": "Hour",
