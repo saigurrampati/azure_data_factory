@@ -34,6 +34,9 @@
 		},
 		"ls_storagesai19_properties_typeProperties_url": {
 			"value": "https://storagesai19.dfs.core.windows.net/"
+		},
+		"tg_event_trigger_example_properties_typeProperties_scope": {
+			"value": "/subscriptions/e41896f4-d154-46d0-a6e2-e4229bc5cd68/resourceGroups/rs_sai/providers/Microsoft.Storage/storageAccounts/storagesai19"
 		}
 	}
 }

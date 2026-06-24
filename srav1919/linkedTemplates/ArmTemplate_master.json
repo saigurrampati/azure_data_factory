@@ -47,6 +47,10 @@
 			"type": "string",
 			"defaultValue": "https://storagesai19.dfs.core.windows.net/"
 		},
+		"tg_event_trigger_example_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/e41896f4-d154-46d0-a6e2-e4229bc5cd68/resourceGroups/rs_sai/providers/Microsoft.Storage/storageAccounts/storagesai19"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -161,6 +165,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"tg_event_trigger_example_properties_typeProperties_scope": {
+						"value": "[parameters('tg_event_trigger_example_properties_typeProperties_scope')]"
 					}
 				}
 			},
