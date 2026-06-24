@@ -1,0 +1,18 @@
+{
+	"name": "tg_event_trigger_example",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/saicontainer/blobs/src_dir",
+			"blobPathEndsWith": ".json",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/e41896f4-d154-46d0-a6e2-e4229bc5cd68/resourceGroups/rs_sai/providers/Microsoft.Storage/storageAccounts/storagesai19",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
