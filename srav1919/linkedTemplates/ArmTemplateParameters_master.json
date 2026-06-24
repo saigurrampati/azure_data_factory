@@ -38,6 +38,12 @@
 		"tg_event_trigger_example_properties_typeProperties_scope": {
 			"value": "/subscriptions/e41896f4-d154-46d0-a6e2-e4229bc5cd68/resourceGroups/rs_sai/providers/Microsoft.Storage/storageAccounts/storagesai19"
 		},
+		"tg_tumbling_window_example_properties_pipeline_parameters_window_start_time": {
+			"value": "@{trigger().outputs.windowStartTime}"
+		},
+		"tg_tumbling_window_example_properties_pipeline_parameters_window_end_time": {
+			"value": "@{trigger().outputs.windowEndTime}"
+		},
 		"containerUri": {
 			"value": ""
 		},
