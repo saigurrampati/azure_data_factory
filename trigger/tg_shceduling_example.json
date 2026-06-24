@@ -1,0 +1,17 @@
+{
+	"name": "tg_shceduling_example",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 1,
+				"startTime": "2026-06-24T13:44:00",
+				"timeZone": "India Standard Time"
+			}
+		}
+	}
+}
