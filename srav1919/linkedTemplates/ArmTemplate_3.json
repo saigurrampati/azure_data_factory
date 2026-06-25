@@ -543,7 +543,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/1_dataflow')]",
+			"name": "[concat(parameters('factoryName'), '/1_dataflow_with_select')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1539,7 +1539,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "1_dataflow",
+								"referenceName": "1_dataflow_with_select",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -1562,7 +1562,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/1_dataflow')]"
+				"[concat(variables('factoryId'), '/dataflows/1_dataflow_with_select')]"
 			]
 		},
 		{
