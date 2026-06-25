@@ -2,7 +2,7 @@
 	"name": "tg_tumbling_window_copy_files",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipeline": {
 			"pipelineReference": {
 				"referenceName": "42_tumbling_window_trigger_real_scenario",
