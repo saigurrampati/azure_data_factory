@@ -1,5 +1,5 @@
 {
-	"name": "4_dataflow_aggregate",
+	"name": "4_dataflow_cast_aggregate",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
