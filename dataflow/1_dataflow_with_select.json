@@ -1,5 +1,5 @@
 {
-	"name": "1_dataflow",
+	"name": "1_dataflow_with_select",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
