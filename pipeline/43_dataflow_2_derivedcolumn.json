@@ -1,5 +1,5 @@
 {
-	"name": "43_dataflow_2",
+	"name": "43_dataflow_2_derivedcolumn",
 	"properties": {
 		"activities": [
 			{
