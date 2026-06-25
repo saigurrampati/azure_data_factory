@@ -10,14 +10,6 @@
 		"tg_event_trigger_example_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/e41896f4-d154-46d0-a6e2-e4229bc5cd68/resourceGroups/rs_sai/providers/Microsoft.Storage/storageAccounts/storagesai19"
-		},
-		"tg_tumbling_window_copy_files_properties_pipeline_parameters_window_start_time": {
-			"type": "string",
-			"defaultValue": "@{trigger().outputs.windowStartTime}"
-		},
-		"tg_tumbling_window_copy_files_properties_pipeline_parameters_window_end_time": {
-			"type": "string",
-			"defaultValue": "@{trigger().outputs.windowEndTime}"
 		}
 	},
 	"variables": {
@@ -683,6 +675,65 @@
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/3_dataflow_filter')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_src_dataflow_gen2_emp_info",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sink_gen2_dataflow_result",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "filter1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          empid as string,",
+						"          firstname as string,",
+						"          lastname as string,",
+						"          age as string,",
+						"          salary as string,",
+						"          gender as string,",
+						"          deptno as integer,",
+						"          state as string,",
+						"          mobilenumber as string,",
+						"          mail as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 filter(deptno==10) ~> filter1",
+						"filter1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
 					]
 				}
 			},
@@ -1596,7 +1647,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/43_dataflow_2')]",
+			"name": "[concat(parameters('factoryName'), '/43_dataflow_2_derivedcolumn')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1715,41 +1766,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/tg_tumbling_window_copy_files')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "42_tumbling_window_trigger_real_scenario",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"window_start_time": "[parameters('tg_tumbling_window_copy_files_properties_pipeline_parameters_window_start_time')]",
-						"window_end_time": "[parameters('tg_tumbling_window_copy_files_properties_pipeline_parameters_window_end_time')]"
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 30,
-					"startTime": "2025-09-01T07:00:00Z",
-					"endTime": "2025-09-01T10:00:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/42_tumbling_window_trigger_real_scenario')]"
-			]
 		}
 	]
 }
