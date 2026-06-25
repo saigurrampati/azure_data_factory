@@ -1,0 +1,23 @@
+{
+	"name": "ds_sink_gen2_dataflow_result",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_storagesai19",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "sink_dir",
+				"fileSystem": "saicontainer"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
