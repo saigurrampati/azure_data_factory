@@ -2,7 +2,17 @@
 	"name": "tg_tumbling_window_copy_files",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "42_tumbling_window_trigger_real_scenario",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"window_start_time": "@{trigger().outputs.windowStartTime}",
+				"window_end_time": "@{trigger().outputs.windowEndTime}"
+			}
+		},
 		"type": "TumblingWindowTrigger",
 		"typeProperties": {
 			"frequency": "Minute",

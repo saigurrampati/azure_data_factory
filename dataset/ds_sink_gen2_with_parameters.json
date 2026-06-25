@@ -1,0 +1,47 @@
+{
+	"name": "ds_sink_gen2_with_parameters",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_storagesai19",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"foldername": {
+				"type": "string"
+			},
+			"filename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@concat('sink_dir/cust_trans/', dataset().foldername)",
+					"type": "Expression"
+				},
+				"fileSystem": "saicontainer"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"order_id": {
+					"type": "string"
+				},
+				"cust_id": {
+					"type": "string"
+				},
+				"order_amt": {
+					"type": "integer"
+				}
+			}
+		}
+	}
+}
