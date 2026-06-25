@@ -59,6 +59,14 @@
 			"type": "string",
 			"defaultValue": "@{trigger().outputs.windowEndTime}"
 		},
+		"tg_tumbling_window_copy_files_properties_pipeline_parameters_window_start_time": {
+			"type": "string",
+			"defaultValue": "@{trigger().outputs.windowStartTime}"
+		},
+		"tg_tumbling_window_copy_files_properties_pipeline_parameters_window_end_time": {
+			"type": "string",
+			"defaultValue": "@{trigger().outputs.windowEndTime}"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -182,6 +190,12 @@
 					},
 					"tg_event_trigger_example_properties_typeProperties_scope": {
 						"value": "[parameters('tg_event_trigger_example_properties_typeProperties_scope')]"
+					},
+					"tg_tumbling_window_copy_files_properties_pipeline_parameters_window_start_time": {
+						"value": "[parameters('tg_tumbling_window_copy_files_properties_pipeline_parameters_window_start_time')]"
+					},
+					"tg_tumbling_window_copy_files_properties_pipeline_parameters_window_end_time": {
+						"value": "[parameters('tg_tumbling_window_copy_files_properties_pipeline_parameters_window_end_time')]"
 					}
 				}
 			},
