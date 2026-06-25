@@ -51,19 +51,19 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/e41896f4-d154-46d0-a6e2-e4229bc5cd68/resourceGroups/rs_sai/providers/Microsoft.Storage/storageAccounts/storagesai19"
 		},
-		"tg_tumbling_window_example_properties_pipeline_parameters_window_start_time": {
-			"type": "string",
-			"defaultValue": "@{trigger().outputs.windowStartTime}"
-		},
-		"tg_tumbling_window_example_properties_pipeline_parameters_window_end_time": {
-			"type": "string",
-			"defaultValue": "@{trigger().outputs.windowEndTime}"
-		},
 		"tg_tumbling_window_copy_files_properties_pipeline_parameters_window_start_time": {
 			"type": "string",
 			"defaultValue": "@{trigger().outputs.windowStartTime}"
 		},
 		"tg_tumbling_window_copy_files_properties_pipeline_parameters_window_end_time": {
+			"type": "string",
+			"defaultValue": "@{trigger().outputs.windowEndTime}"
+		},
+		"tg_tumbling_window_example_properties_pipeline_parameters_window_start_time": {
+			"type": "string",
+			"defaultValue": "@{trigger().outputs.windowStartTime}"
+		},
+		"tg_tumbling_window_example_properties_pipeline_parameters_window_end_time": {
 			"type": "string",
 			"defaultValue": "@{trigger().outputs.windowEndTime}"
 		},
