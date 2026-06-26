@@ -6660,7 +6660,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/6_dataflow_')]",
+			"name": "[concat(parameters('factoryName'), '/6_dataflow_joins')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
