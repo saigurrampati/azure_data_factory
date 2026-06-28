@@ -5629,6 +5629,35 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_src_dataflow_gen2_pivot_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_storagesai19",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "pivot1_data_preview.csv",
+						"folderPath": "src_dir",
+						"fileSystem": "saicontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_storagesai19')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_src_dir')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -6333,6 +6362,104 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_src_dataflow_gen2_emp_info')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sink_gen2_dataflow_result')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/11_dataflow_pivot_unpivot')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_src_dataflow_gen2_emp_info",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_src_dataflow_gen2_pivot_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sink_gen2_dataflow_result",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						},
+						{
+							"name": "pivot1"
+						},
+						{
+							"name": "unpivot1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          empid as string,",
+						"          firstname as string,",
+						"          lastname as string,",
+						"          age as string,",
+						"          salary as integer,",
+						"          gender as string,",
+						"          deptno as integer,",
+						"          state as string,",
+						"          mobilenumber as string,",
+						"          mail as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source(output(",
+						"          deptno as integer,",
+						"          F as string,",
+						"          M as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source2",
+						"source1 aggregate(groupBy(gender,",
+						"          deptno),",
+						"     total_salary = sum(salary)) ~> aggregate1",
+						"aggregate1 pivot(groupBy(deptno),",
+						"     pivotBy(gender),",
+						"     {} = sum(total_salary),",
+						"     columnNaming: '$N$V',",
+						"     lateral: true) ~> pivot1",
+						"source2 unpivot(output(",
+						"          gender as string,",
+						"          total_salary as string",
+						"     ),",
+						"     ungroupBy(deptno),",
+						"     lateral: true,",
+						"     ignoreNullPivots: false) ~> unpivot1",
+						"pivot1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_src_dataflow_gen2_emp_info')]",
+				"[concat(variables('factoryId'), '/datasets/ds_src_dataflow_gen2_pivot_csv')]",
 				"[concat(variables('factoryId'), '/datasets/ds_sink_gen2_dataflow_result')]"
 			]
 		},
