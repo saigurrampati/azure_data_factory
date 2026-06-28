@@ -1,5 +1,5 @@
 {
-	"name": "9_dataflow_",
+	"name": "9_dataflow_sort",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
