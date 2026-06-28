@@ -1167,6 +1167,82 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/13_dataflow_lookup')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_src_dataflow_gen2_emp_info",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_dataflow_dept_info",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sink_gen2_dataflow_result",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "lookup1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          empid as string,",
+						"          firstname as string,",
+						"          lastname as string,",
+						"          age as string,",
+						"          salary as string,",
+						"          gender as string,",
+						"          deptno as string,",
+						"          state as string,",
+						"          mobilenumber as string,",
+						"          mail as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source(output(",
+						"          deptno as string,",
+						"          deptname as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source2",
+						"source1, source2 lookup(source1@deptno == source2@deptno,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> lookup1",
+						"lookup1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/1_dataflow_with_select')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1437,102 +1513,6 @@
 						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/5_dataflow_conditional_split')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_src_dataflow_gen2_emp_info",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_conditional_split_dataflow",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						},
-						{
-							"dataset": {
-								"referenceName": "ds_conditional_split_dataflow",
-								"type": "DatasetReference"
-							},
-							"name": "sink2"
-						}
-					],
-					"transformations": [
-						{
-							"name": "split1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          empid as string,",
-						"          firstname as string,",
-						"          lastname as string,",
-						"          age as string,",
-						"          salary as string,",
-						"          gender as string,",
-						"          deptno as string,",
-						"          state as string,",
-						"          mobilenumber as string,",
-						"          mail as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 split(gender == 'M',",
-						"     disjoint: false) ~> split1@(males, females)",
-						"split1@males sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          empid as string,",
-						"          firstname as string,",
-						"          lastname as string,",
-						"          age as string,",
-						"          salary as string,",
-						"          gender as string,",
-						"          deptno as string",
-						"     ),",
-						"     partitionFileNames:['male_info.csv'],",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> sink1",
-						"split1@females sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          empid as string,",
-						"          firstname as string,",
-						"          lastname as string,",
-						"          age as string,",
-						"          salary as string,",
-						"          gender as string,",
-						"          deptno as string",
-						"     ),",
-						"     partitionFileNames:['female_info.csv'],",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> sink2"
 					]
 				}
 			},
