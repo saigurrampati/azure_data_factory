@@ -6273,6 +6273,70 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/10_dataflow_surrogate_key')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_src_dataflow_gen2_emp_info",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sink_gen2_dataflow_result",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "surrogateKey1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          empid as string,",
+						"          firstname as string,",
+						"          lastname as string,",
+						"          age as string,",
+						"          salary as string,",
+						"          gender as string,",
+						"          deptno as string,",
+						"          state as string,",
+						"          mobilenumber as string,",
+						"          mail as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 keyGenerate(output(sequence as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey1",
+						"surrogateKey1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_src_dataflow_gen2_emp_info')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sink_gen2_dataflow_result')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/1_dataflow_with_select')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
