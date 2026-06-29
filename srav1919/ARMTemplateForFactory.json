@@ -4569,6 +4569,52 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/44_dataflow_copy_department_info')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "15_dataflow_department_info",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/15_dataflow_department_info')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/4_copy_variable_with_dataset_parameter')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -5559,6 +5605,36 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_sink_sqldb_department_info')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sqldb_with_keyvault",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "deptno",
+						"type": "varchar"
+					},
+					{
+						"name": "deptname",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "saischema1",
+					"table": "department_info"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_sqldb_with_keyvault')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_src_dataflow_gen2_emp_info')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -5969,6 +6045,50 @@
 						},
 						"order_amt": {
 							"type": "integer"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_storagesai19')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_src_gen2_jsondata_emp_json')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_storagesai19",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "emp_details_7.json",
+						"folderPath": "src_dir/JsonData",
+						"fileSystem": "saicontainer"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "integer"
+						},
+						"name": {
+							"type": "string"
+						},
+						"gender": {
+							"type": "string"
+						},
+						"language": {
+							"type": "string"
+						},
+						"location": {
+							"type": "string"
 						}
 					}
 				}
@@ -6882,6 +7002,195 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_src_df_gen2_window_function_csv')]",
 				"[concat(variables('factoryId'), '/datasets/ds_sink_gen2_dataflow_result')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/15_dataflow_department_info')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_dataflow_dept_info",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sink_sqldb_department_info",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          deptno as string,",
+						"          deptname as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          deptno as string,",
+						"          deptname as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_src_gen2_dataflow_dept_info')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sink_sqldb_department_info')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/16_dataflow_jsondata_emp_json_files')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_jsondata_emp_json",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_jsondata_emp_json",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_jsondata_emp_json",
+								"type": "DatasetReference"
+							},
+							"name": "source3"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sink_sqldb_department_info",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						},
+						{
+							"name": "flatten1"
+						},
+						{
+							"name": "flatten2"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          gender as string,",
+						"          id as short,",
+						"          languages as string[],",
+						"          name as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'arrayOfDocuments') ~> source1",
+						"source(output(",
+						"          address as (city as string, country as string),",
+						"          gender as string,",
+						"          id as short,",
+						"          name as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'arrayOfDocuments') ~> source2",
+						"source(output(",
+						"          address as (city as string, country as string),",
+						"          gender as string,",
+						"          id as short,",
+						"          languages as string[],",
+						"          name as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'arrayOfDocuments') ~> source3",
+						"source2 select(mapColumn(",
+						"          city = address.city,",
+						"          country = address.country,",
+						"          gender,",
+						"          id,",
+						"          name",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"source1 foldDown(unroll(languages),",
+						"     mapColumn(",
+						"          gender,",
+						"          id,",
+						"          language = languages,",
+						"          name",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flatten1",
+						"source3 foldDown(unroll(languages),",
+						"     mapColumn(",
+						"          city = address.city,",
+						"          country = address.country,",
+						"          gender,",
+						"          id,",
+						"          language = languages,",
+						"          name",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flatten2",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          deptno as string,",
+						"          deptname as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_src_gen2_jsondata_emp_json')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sink_sqldb_department_info')]"
 			]
 		},
 		{
