@@ -1,0 +1,25 @@
+{
+	"name": "ds_sink_sqldb_department_info",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqldb_with_keyvault",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "deptno",
+				"type": "varchar"
+			},
+			{
+				"name": "deptname",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "saischema1",
+			"table": "department_info"
+		}
+	}
+}

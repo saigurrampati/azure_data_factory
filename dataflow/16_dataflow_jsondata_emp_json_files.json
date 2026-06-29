@@ -1,0 +1,127 @@
+{
+	"name": "16_dataflow_jsondata_emp_json_files",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_src_gen2_jsondata_emp_json",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_src_gen2_jsondata_emp_json",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_src_gen2_jsondata_emp_json",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sink_sqldb_department_info",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "flatten1"
+				},
+				{
+					"name": "flatten2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          gender as string,",
+				"          id as short,",
+				"          languages as string[],",
+				"          name as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'arrayOfDocuments') ~> source1",
+				"source(output(",
+				"          address as (city as string, country as string),",
+				"          gender as string,",
+				"          id as short,",
+				"          name as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'arrayOfDocuments') ~> source2",
+				"source(output(",
+				"          address as (city as string, country as string),",
+				"          gender as string,",
+				"          id as short,",
+				"          languages as string[],",
+				"          name as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'arrayOfDocuments') ~> source3",
+				"source2 select(mapColumn(",
+				"          city = address.city,",
+				"          country = address.country,",
+				"          gender,",
+				"          id,",
+				"          name",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source1 foldDown(unroll(languages),",
+				"     mapColumn(",
+				"          gender,",
+				"          id,",
+				"          language = languages,",
+				"          name",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"source3 foldDown(unroll(languages),",
+				"     mapColumn(",
+				"          city = address.city,",
+				"          country = address.country,",
+				"          gender,",
+				"          id,",
+				"          language = languages,",
+				"          name",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten2",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          deptno as string,",
+				"          deptname as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

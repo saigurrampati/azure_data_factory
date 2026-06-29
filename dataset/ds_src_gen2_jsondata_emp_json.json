@@ -1,0 +1,39 @@
+{
+	"name": "ds_src_gen2_jsondata_emp_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_storagesai19",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "emp_details_7.json",
+				"folderPath": "src_dir/JsonData",
+				"fileSystem": "saicontainer"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"gender": {
+					"type": "string"
+				},
+				"language": {
+					"type": "string"
+				},
+				"location": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
