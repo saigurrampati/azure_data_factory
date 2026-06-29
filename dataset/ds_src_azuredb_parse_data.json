@@ -1,0 +1,34 @@
+{
+	"name": "ds_src_azuredb_parse_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqldb_with_keyvault",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "empid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "empname",
+				"type": "varchar"
+			},
+			{
+				"name": "skills",
+				"type": "varchar"
+			},
+			{
+				"name": "address",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "saischema1",
+			"table": "emp_info"
+		}
+	}
+}

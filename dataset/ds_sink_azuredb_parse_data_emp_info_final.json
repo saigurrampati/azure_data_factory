@@ -1,0 +1,46 @@
+{
+	"name": "ds_sink_azuredb_parse_data_emp_info_final",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqldb_with_keyvault",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "empid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "empname",
+				"type": "varchar"
+			},
+			{
+				"name": "skill1",
+				"type": "varchar"
+			},
+			{
+				"name": "skill2",
+				"type": "varchar"
+			},
+			{
+				"name": "skill3",
+				"type": "varchar"
+			},
+			{
+				"name": "city",
+				"type": "varchar"
+			},
+			{
+				"name": "country",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "saischema1",
+			"table": "emp_info_final"
+		}
+	}
+}
