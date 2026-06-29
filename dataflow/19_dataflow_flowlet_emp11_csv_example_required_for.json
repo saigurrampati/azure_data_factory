@@ -17,6 +17,20 @@
 						"type": "DatasetReference"
 					},
 					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_src_gen2_flowlet_emp11_csv",
+						"type": "DatasetReference"
+					},
+					"name": "empdata"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_src_gen2_flowlet_dept11_csv",
+						"type": "DatasetReference"
+					},
+					"name": "deptdata"
 				}
 			],
 			"sinks": [
@@ -40,6 +54,20 @@
 				},
 				{
 					"name": "select2"
+				},
+				{
+					"name": "usingFlowlet",
+					"flowlet": {
+						"referenceName": "1_flowlet",
+						"type": "DataFlowReference"
+					}
+				},
+				{
+					"name": "flowlet1",
+					"flowlet": {
+						"referenceName": "1_flowlet",
+						"type": "DataFlowReference"
+					}
 				}
 			],
 			"scriptLines": [
@@ -57,6 +85,20 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source2",
+				"source(output(",
+				"          empid as string,",
+				"          empname as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> empdata",
+				"source(output(",
+				"          deptid as string,",
+				"          deptname as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> deptdata",
 				"source1 aggregate(groupBy(empid,",
 				"          empname),",
 				"     count = count()) ~> aggregate1",
@@ -75,6 +117,16 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
+				"empdata compose(mapColumn(",
+				"          id = empid,",
+				"          name = empname",
+				"     ),",
+				"     composition: '1_flowlet') ~> usingFlowlet@(output1)",
+				"deptdata compose(mapColumn(",
+				"          id = deptid,",
+				"          name = deptname",
+				"     ),",
+				"     composition: '1_flowlet') ~> flowlet1@(output1)",
 				"select2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     umask: 0022,",
