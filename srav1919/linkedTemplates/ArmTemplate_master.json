@@ -132,15 +132,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"ls_sqldb_with_keyvault_properties_typeProperties_server": {
-						"value": "[parameters('ls_sqldb_with_keyvault_properties_typeProperties_server')]"
-					},
-					"ls_sqldb_with_keyvault_properties_typeProperties_database": {
-						"value": "[parameters('ls_sqldb_with_keyvault_properties_typeProperties_database')]"
-					},
-					"ls_sqldb_with_keyvault_properties_typeProperties_userName": {
-						"value": "[parameters('ls_sqldb_with_keyvault_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -161,6 +152,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"ls_sqldb_with_keyvault_properties_typeProperties_server": {
+						"value": "[parameters('ls_sqldb_with_keyvault_properties_typeProperties_server')]"
+					},
+					"ls_sqldb_with_keyvault_properties_typeProperties_database": {
+						"value": "[parameters('ls_sqldb_with_keyvault_properties_typeProperties_database')]"
+					},
+					"ls_sqldb_with_keyvault_properties_typeProperties_userName": {
+						"value": "[parameters('ls_sqldb_with_keyvault_properties_typeProperties_userName')]"
 					},
 					"tg_tumbling_window_example_properties_pipeline_parameters_window_start_time": {
 						"value": "[parameters('tg_tumbling_window_example_properties_pipeline_parameters_window_start_time')]"
