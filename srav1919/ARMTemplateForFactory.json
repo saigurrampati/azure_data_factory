@@ -7692,6 +7692,20 @@
 								"type": "DatasetReference"
 							},
 							"name": "source2"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_flowlet_emp11_csv",
+								"type": "DatasetReference"
+							},
+							"name": "empdata"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_flowlet_dept11_csv",
+								"type": "DatasetReference"
+							},
+							"name": "deptdata"
 						}
 					],
 					"sinks": [
@@ -7704,6 +7718,22 @@
 						}
 					],
 					"transformations": [
+						{
+							"name": "usingFlowlet",
+							"flowlet": {
+								"referenceName": "1_flowlet",
+								"type": "DataFlowReference",
+								"parameters": {}
+							}
+						},
+						{
+							"name": "flowlet1",
+							"flowlet": {
+								"referenceName": "1_flowlet",
+								"type": "DataFlowReference",
+								"parameters": {}
+							}
+						},
 						{
 							"name": "aggregate1"
 						},
@@ -7732,6 +7762,30 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> source2",
+						"source(output(",
+						"          empid as string,",
+						"          empname as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> empdata",
+						"source(output(",
+						"          deptid as string,",
+						"          deptname as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> deptdata",
+						"empdata compose(mapColumn(",
+						"          id = empid,",
+						"          name = empname",
+						"     ),",
+						"     composition: '1_flowlet') ~> usingFlowlet@(output1)",
+						"deptdata compose(mapColumn(",
+						"          id = deptid,",
+						"          name = deptname",
+						"     ),",
+						"     composition: '1_flowlet') ~> flowlet1@(output1)",
 						"source1 aggregate(groupBy(empid,",
 						"          empname),",
 						"     count = count()) ~> aggregate1",
@@ -7761,6 +7815,7 @@
 				}
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/1_flowlet')]",
 				"[concat(variables('factoryId'), '/datasets/ds_src_gen2_flowlet_emp11_csv')]",
 				"[concat(variables('factoryId'), '/datasets/ds_src_gen2_flowlet_dept11_csv')]",
 				"[concat(variables('factoryId'), '/datasets/ds_sink_gen2_dataflow_result')]"
@@ -7838,6 +7893,51 @@
 				"[concat(variables('factoryId'), '/datasets/ds_src_dataflow_gen2_emp_info')]",
 				"[concat(variables('factoryId'), '/datasets/ds_sink_gen2_dataflow_result')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/1_flowlet')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Flowlet",
+				"typeProperties": {
+					"sources": [],
+					"sinks": [],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "input1"
+						},
+						{
+							"name": "output1"
+						}
+					],
+					"scriptLines": [
+						"input(output(",
+						"          id as string,",
+						"          name as string",
+						"     ),",
+						"     order: 0,",
+						"     allowSchemaDrift: true) ~> input1",
+						"input1 aggregate(groupBy(id,",
+						"          name),",
+						"     count = count()) ~> aggregate1",
+						"aggregate1 select(mapColumn(",
+						"          id,",
+						"          name",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 output() ~> output1"
+					]
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/2_dataflow_derviedcolumn_select')]",

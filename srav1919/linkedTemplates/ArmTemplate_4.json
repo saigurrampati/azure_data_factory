@@ -13,6 +13,34 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_sink_sqldb_department_info')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sqldb_with_keyvault",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "deptno",
+						"type": "varchar"
+					},
+					{
+						"name": "deptname",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "saischema1",
+					"table": "department_info"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_src_azuredb_parse_data')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -563,6 +591,20 @@
 								"type": "DatasetReference"
 							},
 							"name": "source2"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_flowlet_emp11_csv",
+								"type": "DatasetReference"
+							},
+							"name": "empdata"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_flowlet_dept11_csv",
+								"type": "DatasetReference"
+							},
+							"name": "deptdata"
 						}
 					],
 					"sinks": [
@@ -575,6 +617,22 @@
 						}
 					],
 					"transformations": [
+						{
+							"name": "usingFlowlet",
+							"flowlet": {
+								"referenceName": "1_flowlet",
+								"type": "DataFlowReference",
+								"parameters": {}
+							}
+						},
+						{
+							"name": "flowlet1",
+							"flowlet": {
+								"referenceName": "1_flowlet",
+								"type": "DataFlowReference",
+								"parameters": {}
+							}
+						},
 						{
 							"name": "aggregate1"
 						},
@@ -603,6 +661,30 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> source2",
+						"source(output(",
+						"          empid as string,",
+						"          empname as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> empdata",
+						"source(output(",
+						"          deptid as string,",
+						"          deptname as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> deptdata",
+						"empdata compose(mapColumn(",
+						"          id = empid,",
+						"          name = empname",
+						"     ),",
+						"     composition: '1_flowlet') ~> usingFlowlet@(output1)",
+						"deptdata compose(mapColumn(",
+						"          id = deptid,",
+						"          name = deptname",
+						"     ),",
+						"     composition: '1_flowlet') ~> flowlet1@(output1)",
 						"source1 aggregate(groupBy(empid,",
 						"          empname),",
 						"     count = count()) ~> aggregate1",
@@ -1379,54 +1461,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2026-06-21T04:24:48Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/23_lookup_activity_with_stored_procedure')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[dbo].[getdeptdata]",
-								"storedProcedureParameters": {
-									"id": {
-										"type": "String",
-										"value": "D2"
-									}
-								},
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "db_src_sqldb_lookup",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2026-06-21T05:04:29Z"
 			},
 			"dependsOn": []
 		}
