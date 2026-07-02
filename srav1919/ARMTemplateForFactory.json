@@ -4615,6 +4615,58 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/45_dataflow_alter_row')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "20_dataflow_alter_row",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source2": {},
+									"source3": {},
+									"source4": {},
+									"sink1": {},
+									"sink2": {},
+									"sink3": {},
+									"sink4": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/20_dataflow_alter_row')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/45_dataflow_parse_data')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -5347,6 +5399,40 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_storagesai19')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sink_azuredb_cust_dtls_table')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sqldb_with_keyvault",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "cust_id",
+						"type": "varchar"
+					},
+					{
+						"name": "cust_name",
+						"type": "varchar"
+					},
+					{
+						"name": "country",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "saischema1",
+					"table": "cust_dtls"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_sqldb_with_keyvault')]"
 			]
 		},
 		{
@@ -6105,6 +6191,48 @@
 					},
 					{
 						"name": "deptname",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_storagesai19')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_src_gen2_cc2_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_storagesai19",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "cc2.csv",
+						"folderPath": "src_dir",
+						"fileSystem": "saicontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "cust_id",
+						"type": "String"
+					},
+					{
+						"name": "cust_name",
+						"type": "String"
+					},
+					{
+						"name": "country",
 						"type": "String"
 					}
 				]
@@ -7938,6 +8066,195 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/20_dataflow_alter_row')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_cc2_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_cc2_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_cc2_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source3"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_src_gen2_cc2_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source4"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sink_azuredb_cust_dtls_table",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_sink_azuredb_cust_dtls_table",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_sink_azuredb_cust_dtls_table",
+								"type": "DatasetReference"
+							},
+							"name": "sink3"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_sink_azuredb_cust_dtls_table",
+								"type": "DatasetReference"
+							},
+							"name": "sink4"
+						}
+					],
+					"transformations": [
+						{
+							"name": "DeleteRows"
+						},
+						{
+							"name": "Update"
+						},
+						{
+							"name": "updateAll"
+						},
+						{
+							"name": "upsert"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          cust_id as string,",
+						"          cust_name as string,",
+						"          country as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source(output(",
+						"          cust_id as string,",
+						"          cust_name as string,",
+						"          country as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source2",
+						"source(output(",
+						"          cust_id as string,",
+						"          cust_name as string,",
+						"          country as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source3",
+						"source(output(",
+						"          cust_id as string,",
+						"          cust_name as string,",
+						"          country as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source4",
+						"source1 alterRow(deleteIf(country=='USA')) ~> DeleteRows",
+						"source2 alterRow(updateIf(country=='USA')) ~> Update",
+						"source3 alterRow(updateIf(true())) ~> updateAll",
+						"source4 alterRow(upsertIf(true())) ~> upsert",
+						"DeleteRows sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          cust_id as string,",
+						"          cust_name as string,",
+						"          country as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
+						"Update sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          cust_id as string,",
+						"          cust_name as string,",
+						"          country as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['cust_id'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink2",
+						"updateAll sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          cust_id as string,",
+						"          cust_name as string,",
+						"          country as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['cust_id'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink3",
+						"upsert sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          cust_id as string,",
+						"          cust_name as string,",
+						"          country as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:false,",
+						"     upsertable:true,",
+						"     keys:['cust_id'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink4"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_src_gen2_cc2_csv')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sink_azuredb_cust_dtls_table')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/2_dataflow_derviedcolumn_select')]",
