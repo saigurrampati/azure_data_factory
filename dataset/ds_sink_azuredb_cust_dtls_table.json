@@ -1,0 +1,29 @@
+{
+	"name": "ds_sink_azuredb_cust_dtls_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqldb_with_keyvault",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "cust_id",
+				"type": "varchar"
+			},
+			{
+				"name": "cust_name",
+				"type": "varchar"
+			},
+			{
+				"name": "country",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "saischema1",
+			"table": "cust_dtls"
+		}
+	}
+}
